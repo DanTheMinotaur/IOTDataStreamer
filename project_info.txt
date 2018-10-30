@@ -1,0 +1,6 @@
+Use the Ultrasonic Range Sensor
+When something passes within like 15 cm it will read the room temperature and store it on a file.
+There is also a button. When the button is clicked it will upload to dweety.io
+
+for fun
+When uploading the data the LED will blink
