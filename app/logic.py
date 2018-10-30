@@ -3,7 +3,7 @@ from app.uploader import Dweeter
 from time import sleep
 
 class Controller:
-    # Class is for controlling application logic
+    # Class is for controlling application logic, optional parameter to call what is sent to dweeter something else.
     def __init__(self, dweeter_name=None):
         if dweeter_name is not None:
             self.uploader = Dweeter(dweeter_name)
@@ -13,6 +13,9 @@ class Controller:
         self.sensors = Sensors()
 
     def application(self, activation_distance):
+        # Controls the main application logic using a loop
+        # Checks to see if the button has been clicked
+        # activation distance can be changed to increase the range
         try:
             device_already_on = False
             while True:
@@ -25,7 +28,7 @@ class Controller:
                     self.sensors.led_off()
                     self.sensors.device_on = False
                     device_already_on = False
-                    print("Exiting Program")
+                    print("Shutting Down")
                     break
                 else:
                     if self.sensors.device_on:

@@ -29,7 +29,7 @@ class Sensors(SensorSetUp):
         self.led_off()
 
     def __get_weather(self):
-        # Method gets the temp and hummidity sensor. If there are no readings it returns none
+        # Method gets the temp and hummidity sensor. If there are no valid readings it returns none
         [t, h] = grovepi.dht(self.weather_sensor_pin, 0)
         if not isnan(t) and not isnan(h):
             return {"temp": t, "hum": h}
