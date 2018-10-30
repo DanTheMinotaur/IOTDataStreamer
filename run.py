@@ -1,7 +1,9 @@
 from app.sensors import Sensors
+from app.logic import Controller
 
-sensor = Sensors()
+# sensor = Sensors()
 
-while True:
-    sensor.get_readings()
-    print(sensor.readings)
+app = Controller()
+
+
+app.application(30)

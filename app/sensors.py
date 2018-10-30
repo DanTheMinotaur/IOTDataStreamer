@@ -23,9 +23,10 @@ class Sensors(SensorSetUp):
                 "temperature": None,
                 "humidity": None
             },
-            "button_status": None,
             "reading_created": None
         }
+        self.device_on = False
+        self.led_off()
 
     def __get_weather(self):
         # Method gets the temp and hummidity sensor. If there are no readings it returns none
@@ -35,18 +36,17 @@ class Sensors(SensorSetUp):
         else:
             return None
 
-    def __get_ultrasonic(self):
+    def get_ultrasonic(self):
         # Method returns ultrasonic readings from sensor
         return grovepi.ultrasonicRead(self.ultrasonic_pin)
 
-    def __get_button_status(self):
-        # Method returns the current status of a button, e.g. if it's clicked or not
+    def get_button_status(self):
+        # Method returns the current status of a button, e.g. if it was clicked or not
         return grovepi.digitalRead(self.button_pin)
 
     def get_readings(self):
         # Methods assigns all methods to instance dictionary
-        self.readings["ultrasonic_distance"] = self.__get_ultrasonic()
-        self.readings["button_status"] = self.__get_button_status()
+        self.readings["ultrasonic_distance"] = self.get_ultrasonic()
         weather_data = self.__get_weather()
         if weather_data is not None:
             self.readings["weather_readings"]["temperature"] = weather_data["temp"]
