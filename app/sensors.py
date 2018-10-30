@@ -1,5 +1,6 @@
 import grovepi
 from math import isnan
+from datetime import datetime
 
 class SensorSetUp:
     # Class for configuration of pin settings
@@ -11,14 +12,19 @@ class SensorSetUp:
 
 class Sensors(SensorSetUp):
     def __init__(self):
+        # Set Button as input mode
         grovepi.pinMode(self.button_pin, "INPUT")
+        # Set LED to off initially
+        grovepi.digitalWrite(self.led_pin, 0)
+        # Data Structure for sensor readings
         self.readings = {
             "ultrasonic_distance": None,
             "weather_readings": {
                 "temperature": None,
                 "humidity": None
             },
-            "button_status": None
+            "button_status": None,
+            "reading_created": None
         }
 
     def __get_weather(self):
@@ -45,3 +51,12 @@ class Sensors(SensorSetUp):
         if weather_data is not None:
             self.readings["weather_readings"]["temperature"] = weather_data["temp"]
             self.readings["weather_readings"]["humidity"] = weather_data["hum"]
+
+        self.readings["reading_created"] = str(datetime.now())
+
+    # Methods turn on and off LED
+    def led_on(self):
+        grovepi.digitalWrite(self.led_pin, 1)
+
+    def led_off(self):
+        grovepi.digitalWrite(self.led_pin, 0)
