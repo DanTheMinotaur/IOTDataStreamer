@@ -6,6 +6,7 @@ class Dweeter:
         self.thing_name = thing_name
 
     def send_dweet(self, data):
+        print("Posting to DWEETER https://dweet.io/get/dweets/for/" + self.thing_name)
         response = dweepy.dweet_for(
             self.thing_name,
             data
