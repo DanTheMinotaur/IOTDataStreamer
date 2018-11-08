@@ -1,5 +1,5 @@
 import dweepy
-
+import csv
 
 class Dweeter:
     def __init__(self, thing_name='PIBOMETER'):
@@ -11,6 +11,18 @@ class Dweeter:
             self.thing_name,
             data
         )
+        with open('data/sent_data.csv', 'a') as file:
+            row = [
+                response['thing'],
+                response['created'],
+                response['content']['ultrasonic_distance'],
+                response['content']['weather_readings']['temperature'],
+                response['content']['weather_readings']['humidity'],
+                response
+            ]
+            writer = csv.writer(file)
+            writer.writerow(row)
+
         return response
 
     def get_dweets(self):

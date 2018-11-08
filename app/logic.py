@@ -39,11 +39,17 @@ class Controller:
                         if distance <= activation_distance:
                             print("Transmitting Data")
                             self.sensors.get_readings()
+                            self.sensors.led_off()
                             data = self.sensors.readings
                             print(data)
                             response = self.uploader.send_dweet(data)
+                            self.sensors.led_on()
+                            sleep(.25)
+                            self.sensors.led_off()
                             print("Data Transmitted")
+                            sleep(.25)
                             print(response)
+                            self.sensors.led_on()
                     else:
                         print("Device Off")
 
