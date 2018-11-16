@@ -81,7 +81,86 @@ function fetchData(name) {
             console.log(error);
         });
 }
+//window.localStorage.clear();
+/*
+    Function for storing thing data and appending it to
+ */
+function storeData(thing_data) {
+    let current_values = localStorage.getItem("deviceData");
+    console.log(thing_data);
 
+    if (current_values == null) {
+        console.log("No Data, Creating Initial Data");
+        localStorage.setItem("deviceData", JSON.stringify(thing_data));
+    } else {
+        console.log("Data Currently Exists, appending new data");
+        let currentData = localStorage.getItem("deviceData");
+        console.log(currentData);
+        let jsonData = JSON.parse(currentData);
+        console.log(typeof jsonData);
+        jsonData = jsonData.concat(thing_data);
+        console.log(jsonData);
+        localStorage.setItem("deviceData", JSON.stringify(jsonData));
+    }
+
+}
+
+var test_data = [
+    {
+        "thing": "PIBOMETER",
+        "created": "2018-11-16T15:17:41.155Z",
+        "content": {
+            "ultrasonic_distance": 3,
+            "weather_readings": {
+                "humidity": 28,
+                "temperature": 27
+            },
+            "reading_created": "2018-11-16 15:17:38.827067"
+        }
+    },
+    {
+        "thing": "PIBOMETER",
+        "created": "2018-11-16T15:18:10.155Z",
+        "content": {
+            "ultrasonic_distance": 30,
+            "weather_readings": {
+                "humidity": 22,
+                "temperature": 26
+            },
+            "reading_created": "2018-11-16 15:17:38.827067"
+        }
+    }
+];
+
+
+/*
 var r = fetchData("PIBOMETER");
 console.log(r);
 console.log(JSON.stringify(r));
+*/
+storeData(test_data);
+
+//var storedData = localStorage.getItem("deviceData");
+
+//console.log(storedData);
+var data = localStorage.getItem("deviceData");
+
+console.log(data);
+
+storeData([
+    {
+        "thing": "PIBOMETER",
+        "created": "2018-11-16T15:01:41.155Z",
+        "content": {
+            "ultrasonic_distance": 1,
+            "weather_readings": {
+                "humidity": 22,
+                "temperature": 27
+            },
+            "reading_created": "2018-11-16 15:17:38.827067"
+        }
+    }]);
+
+var data = localStorage.getItem("deviceData");
+
+console.log(data);
