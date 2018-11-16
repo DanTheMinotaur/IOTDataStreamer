@@ -1,6 +1,7 @@
 import dweepy
 import csv
 
+
 class Dweeter:
     def __init__(self, thing_name='PIBOMETER'):
         self.thing_name = thing_name
