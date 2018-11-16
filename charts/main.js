@@ -1,18 +1,34 @@
-window.localStorage.clear();
+//window.localStorage.clear();
 
-function loadChart(elm, chart_name, data) {
+function loadChart(elm, chart_name, type_of_data, thing_name, data) {
     Highcharts.chart(elm, {
         title: {
             text: chart_name
         },
 
         subtitle: {
-            text: 'Source: thesolarfoundation.com'
+            text: thing_name
         },
 
         yAxis: {
             title: {
-                text: 'Number of Employees'
+                text: type_of_data
+            }
+        },
+        xAxis: {
+            // Code from https://stackoverflow.com/questions/8268170/plotting-seconds-minutes-and-hours-on-the-yaxis-with-highcharts
+            type: 'datetime',
+            dateTimeLabelFormats: { //force all formats to be hour:minute:second
+                second: '%H:%M:%S',
+                minute: '%H:%M:%S',
+                hour: '%H:%M:%S',
+                day: '%H:%M:%S',
+                week: '%H:%M:%S',
+                month: '%H:%M:%S',
+                year: '%H:%M:%S'
+            },
+            title: {
+                text: 'Time'
             }
         },
         legend: {
@@ -26,26 +42,12 @@ function loadChart(elm, chart_name, data) {
                 label: {
                     connectorAllowed: false
                 },
-                pointStart: 2010
             }
         },
 
-        series: [{
-            name: 'Installation',
-            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-        }, {
-            name: 'Manufacturing',
-            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-        }, {
-            name: 'Sales & Distribution',
-            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-        }, {
-            name: 'Project Development',
-            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-        }, {
-            name: 'Other',
-            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-        }],
+        series: [
+            data
+        ],
 
         responsive: {
             rules: [{
@@ -64,6 +66,7 @@ function loadChart(elm, chart_name, data) {
 
     });
 }
+
 /*
     Function for storing thing data and appending it to
  */
@@ -71,16 +74,35 @@ function storeData(thing_data) {
     let current_values = localStorage.getItem("deviceData");
     //console.log(thing_data);
 
+
     if (current_values == null) {
         console.log("No Data, Creating Initial Data");
         localStorage.setItem("deviceData", JSON.stringify(thing_data));
     } else {
         console.log("Data Currently Exists, appending new data");
-        let currentData = localStorage.getItem("deviceData");
+        let jsonData = JSON.parse(localStorage.getItem("deviceData"));
+
         //console.log(currentData);
-        let jsonData = JSON.parse(currentData);
-        //console.log(typeof jsonData);
-        jsonData = jsonData.concat(thing_data);
+        //let jsonData = JSON.parse(currentData);
+
+        let new_thing_data = [];
+        // Checks if the data is a duplicate
+        thing_data.forEach(function (obj) {
+            let alreadyIn = false;
+            // Search in current data for value
+            jsonData.forEach(function (currObj) {
+                if (obj.created === currObj.created){
+                    alreadyIn = true;
+                }
+            });
+            if (!alreadyIn) {
+                new_thing_data.push(obj);
+            }
+        });
+
+        console.log("NEW THING DATA" + new_thing_data);
+        console.log("HERE");
+        jsonData = jsonData.concat(new_thing_data);
 
         //jsonData = new Set(jsonData);
         //console.log(jsonData);
@@ -102,48 +124,12 @@ function fetchData(name) {
             console.log(thing_data);
             storeData(thing_data);
         })
-        .then(function (data) {
-            console.log(localStorage.getItem("deviceData"))
-        })
         .catch(function (error) {
             console.log(error);
         });
 }
 
-
-var test_data = [
-    {
-        "thing": "PIBOMETER",
-        "created": "2018-11-16T15:17:41.155Z",
-        "content": {
-            "ultrasonic_distance": 3,
-            "weather_readings": {
-                "humidity": 28,
-                "temperature": 27
-            },
-            "reading_created": "2018-11-16 15:17:38.827067"
-        }
-    },
-    {
-        "thing": "PIBOMETER",
-        "created": "2018-11-16T15:18:10.155Z",
-        "content": {
-            "ultrasonic_distance": 30,
-            "weather_readings": {
-                "humidity": 22,
-                "temperature": 26
-            },
-            "reading_created": "2018-11-16 15:17:38.827067"
-        }
-    }
-];
-
-
-var r = fetchData("PIBOMETER");
-console.log(r);
-console.log(JSON.stringify(r));
-
-storeData(test_data);
+fetchData("PIBOMETER");
 
 //var storedData = localStorage.getItem("deviceData");
 
@@ -151,7 +137,7 @@ storeData(test_data);
 var data = localStorage.getItem("deviceData");
 
 console.log(data);
-
+/*
 storeData([
     {
         "thing": "PIBOMETER",
@@ -169,7 +155,7 @@ storeData([
 var data = localStorage.getItem("deviceData");
 
 console.log(data);
-
+*/
 
 Highcharts.chart('container', {
 
@@ -242,6 +228,7 @@ Highcharts.chart('container', {
     }
 
 });
+/*
 
 var date_time_test = "2018-11-16T15:17:41.155Z";
 
@@ -250,3 +237,6 @@ var unix_time = Date.parse(date_time_test);
 console.log(unix_time);
 
 console.log("Time NOW!! " + Date.now());
+
+*/
+console.log("")
