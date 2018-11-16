@@ -5,4 +5,4 @@ from app.logic import Controller
 app = Controller()
 
 
-app.application(30)
+app.application()

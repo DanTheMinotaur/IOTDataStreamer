@@ -3,7 +3,7 @@ from math import isnan
 from datetime import datetime
 
 class SensorSetUp:
-    # Class for configuration of pin settings
+    # Class for default configuration of pin settings
     ultrasonic_pin = 8
     weather_sensor_pin = 7
     button_pin = 6

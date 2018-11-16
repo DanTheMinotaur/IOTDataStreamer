@@ -1,0 +1,10 @@
+{
+  "config": {
+      "name": "PIBOMETER",
+      "ultrasonic_pin": 8,
+      "weather_sensor_pin": 7,
+      "button_pin": 6,
+      "led_pin": 5,
+      "sensor_distance": 60
+  }
+}
