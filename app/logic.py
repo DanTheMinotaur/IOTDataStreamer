@@ -4,7 +4,9 @@ from time import sleep
 import json
 
 class Controller:
-    # Class is for controlling application logic, optional parameter to call what is sent to dweeter something else.
+    """
+        Class is for controlling application logic, it takes a 'config.json' which sets the buttons and pins
+    """
     def __init__(self, config_file='config.json'):
 
         config_data = self.load_config(config_file)
@@ -23,13 +25,6 @@ class Controller:
             self.sensors.button_pin = config_data['config']['button_pin']
             self.sensors.led_pin = config_data['config']['led_pin']
             self.sensor_distance = config_data['config']['sensor_distance']
-        """
-        if dweeter_name is not None:
-            self.uploader = Dweeter(dweeter_name)
-        else:
-            self.uploader = Dweeter()
-        """
-        self.sensors = Sensors()
 
 
     @staticmethod
@@ -76,7 +71,6 @@ class Controller:
                 elif self.sensors.get_button_status() == 1 and device_already_on:
                     self.sensors.led_off()
                     self.sensors.device_on = False
-                    device_already_on = False
                     print("Shutting Down")
                     break
                 else:

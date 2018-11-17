@@ -3,7 +3,9 @@ from math import isnan
 from datetime import datetime
 
 class SensorSetUp:
-    # Class for default configuration of pin settings
+    """
+        Class used for assigning default pins and initailising class variables,
+    """
     ultrasonic_pin = 8
     weather_sensor_pin = 7
     button_pin = 6
@@ -11,6 +13,9 @@ class SensorSetUp:
 
 
 class Sensors(SensorSetUp):
+    """
+        Class used for accessing data from pins and formatting and return specific data.
+    """
     def __init__(self):
         # Set Button as input mode
         grovepi.pinMode(self.button_pin, "INPUT")

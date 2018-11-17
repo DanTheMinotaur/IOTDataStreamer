@@ -1,6 +1,8 @@
 from app.logic import Controller
 
-# sensor = Sensors()
+"""
+    File just to run the controller application logic.
+"""
 
 app = Controller()
 

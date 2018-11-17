@@ -3,9 +3,15 @@ import csv
 
 
 class Dweeter:
+    """
+        Wrapper Class for Dweet.io
+    """
     def __init__(self, thing_name='PIBOMETER'):
         self.thing_name = thing_name
 
+    """
+        Method will post data to dweet and then store the response in the csv file. 
+    """
     def send_dweet(self, data):
         print("Posting to DWEETER https://dweet.io/get/dweets/for/" + self.thing_name)
         response = dweepy.dweet_for(
@@ -26,6 +32,9 @@ class Dweeter:
 
         return response
 
+    """
+        Returns the dweets for the defined thing.
+    """
     def get_dweets(self):
         return dweepy.get_dweets_for(self.thing_name)
 
