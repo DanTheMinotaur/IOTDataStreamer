@@ -3,11 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>IOT Data Streamer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
+<ul class="nav">
+  <li class="nav-item">
+    <button type="button" class="btn btn-primary" id="pullData">Pull New Data</button>
+  </li>
+  <li class="nav-item">
+    <button type="button" class="btn btn-danger" id="deleteData">Delete Data</button>
+  </li>
 
-<div id="container"></div>
-<div id="content_test"></div>
+</ul>
+<div class="container">
+    <div class="row">
+        <div id="temperature" class="col"></div>
+        <div id="humidity" class="col"></div>
+        <div id="distance" class="col"></div>
+    </div>
+</div>
 
 </body>
 <script src="https://code.highcharts.com/highcharts.js"></script>

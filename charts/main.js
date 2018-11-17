@@ -1,5 +1,9 @@
 //window.localStorage.clear();
 
+/*
+    Method for Generation of Chart
+ */
+
 function loadChart(elm, chart_name, type_of_data, thing_name, data) {
     Highcharts.chart(elm, {
         title: {
@@ -13,7 +17,8 @@ function loadChart(elm, chart_name, type_of_data, thing_name, data) {
         yAxis: {
             title: {
                 text: type_of_data
-            }
+            },
+            min: 0
         },
         xAxis: {
             // Code from https://stackoverflow.com/questions/8268170/plotting-seconds-minutes-and-hours-on-the-yaxis-with-highcharts
@@ -46,7 +51,10 @@ function loadChart(elm, chart_name, type_of_data, thing_name, data) {
         },
 
         series: [
-            data
+            {
+                name: type_of_data,
+                data: data
+            }
         ],
 
         responsive: {
@@ -108,13 +116,13 @@ function storeData(thing_data) {
         //console.log(jsonData);
         localStorage.setItem("deviceData", JSON.stringify(jsonData));
     }
-
+    return JSON.parse(localStorage.getItem("deviceData"));
 }
 
 /*
     Fetches Data Via GET request from dweet
  */
-function fetchData(name) {
+function fetchData(name, refresh=true) {
     var url = "https://dweet.io/get/dweets/for/" + name;
 
     return fetch(url)
@@ -122,7 +130,12 @@ function fetchData(name) {
         .then(function (data) {
             let thing_data = data.with;
             console.log(thing_data);
-            storeData(thing_data);
+            return storeData(thing_data);
+        })
+        .then(function (dataArray) {
+            if (refresh) {
+                createGraphs(dataArray);
+            }
         })
         .catch(function (error) {
             console.log(error);
@@ -131,112 +144,58 @@ function fetchData(name) {
 
 fetchData("PIBOMETER");
 
-//var storedData = localStorage.getItem("deviceData");
+function createTemperatureGraph(tempData) {
+    dataArray = [];
 
-//console.log(storedData);
-var data = localStorage.getItem("deviceData");
+    tempData.forEach(function (data) {
+       dataArray.push([Date.parse(data.created), data.content.weather_readings.temperature]);
+    });
 
-console.log(data);
+    loadChart("temperature", "Temperature", "Degrees", "PIBOMETER", dataArray);
+}
+
 /*
-storeData([
-    {
-        "thing": "PIBOMETER",
-        "created": "2018-11-16T15:01:41.155Z",
-        "content": {
-            "ultrasonic_distance": 1,
-            "weather_readings": {
-                "humidity": 22,
-                "temperature": 27
-            },
-            "reading_created": "2018-11-16 15:17:38.827067"
-        }
-    }]);
+    Method used to create Graphs
+ */
+function createGraphs(dataArray) {
+    tempData = [];
+    humData = [];
+    distanceData = [];
 
-var data = localStorage.getItem("deviceData");
+    if (dataArray != null) {
+        dataArray.forEach(function (data) {
+           tempData.push([Date.parse(data.created), data.content.weather_readings.temperature]);
+           humData.push([Date.parse(data.created), data.content.weather_readings.humidity]);
+           distanceData.push([Date.parse(data.created), data.content.ultrasonic_distance]);
+        });
 
-console.log(data);
-*/
-
-Highcharts.chart('container', {
-
-    title: {
-        text: 'Solar Employment Growth by Sector, 2010-2016'
-    },
-
-    subtitle: {
-        text: 'Source: thesolarfoundation.com'
-    },
-
-    yAxis: {
-        title: {
-            text: 'Temperature'
-        }
-    },
-    xAxis: {
-        // Code from https://stackoverflow.com/questions/8268170/plotting-seconds-minutes-and-hours-on-the-yaxis-with-highcharts
-        type: 'datetime',
-        dateTimeLabelFormats: { //force all formats to be hour:minute:second
-            second: '%H:%M:%S',
-            minute: '%H:%M:%S',
-            hour: '%H:%M:%S',
-            day: '%H:%M:%S',
-            week: '%H:%M:%S',
-            month: '%H:%M:%S',
-            year: '%H:%M:%S'
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
-
-    plotOptions: {
-        series: {
-            label: {
-                connectorAllowed: false
-            },
-            //pointStart: 2010
-        }
-    },
-
-    series: [{
-        name: 'Sensor Data',
-        data: [
-
-            [Date.now(), 0],
-            [Date.now() + 1000, 0.25],
-            [Date.now() + 2500, 1.41],
-            [Date.now() + 5000, 1.64],
-            [Date.now() + 10000, 1.6],
-        ]
-    }],
-
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 500
-            },
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
-            }
-        }]
+        tempData.sort();
+        humData.sort();
+        distanceData.sort();
     }
 
-});
-/*
 
-var date_time_test = "2018-11-16T15:17:41.155Z";
 
-var unix_time = Date.parse(date_time_test);
+    loadChart("temperature", "Temperature", "Degrees", "PIBOMETER", tempData);
+    loadChart("humidity", "Humidity", "Water Content", "PIBOMETER", humData);
+    loadChart("distance", "Distance Set off", "CM", "PIBOMETER", distanceData);
+}
 
-console.log(unix_time);
+//var storedData = JSON.parse(localStorage.getItem("deviceData"));
 
-console.log("Time NOW!! " + Date.now());
+//console.log("Stored Data " + storedData);
 
-*/
-console.log("")
+//createGraphs(storedData);
+
+var pullNewData = document.getElementById("pullData");
+var deleteData = document.getElementById("deleteData");
+pullNewData.onclick = function () {
+    fetchData("PIBOMETER");
+    //let storedData = JSON.parse(localStorage.getItem("deviceData"));
+    //createGraphs(storedData);
+};
+deleteData.onclick = function () {
+    window.localStorage.clear();
+    let storedData = JSON.parse(localStorage.getItem("deviceData"));
+    createGraphs(storedData);
+};
