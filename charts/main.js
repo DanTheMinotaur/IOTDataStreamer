@@ -1,7 +1,7 @@
 //window.localStorage.clear();
 
 /*
-    Method for Generation of Chart
+    Method for Generation of Chart for HighCharts for easier chart generation
  */
 
 function loadChart(elm, chart_name, type_of_data, thing_name, data) {
@@ -76,12 +76,10 @@ function loadChart(elm, chart_name, type_of_data, thing_name, data) {
 }
 
 /*
-    Function for storing thing data and appending it to
+    Function for storing thing data and appending it to any data that is currently stored.
  */
 function storeData(thing_data) {
     let current_values = localStorage.getItem("deviceData");
-    //console.log(thing_data);
-
 
     if (current_values == null) {
         console.log("No Data, Creating Initial Data");
@@ -89,9 +87,6 @@ function storeData(thing_data) {
     } else {
         console.log("Data Currently Exists, appending new data");
         let jsonData = JSON.parse(localStorage.getItem("deviceData"));
-
-        //console.log(currentData);
-        //let jsonData = JSON.parse(currentData);
 
         let new_thing_data = [];
         // Checks if the data is a duplicate
@@ -112,15 +107,13 @@ function storeData(thing_data) {
         console.log("HERE");
         jsonData = jsonData.concat(new_thing_data);
 
-        //jsonData = new Set(jsonData);
-        //console.log(jsonData);
         localStorage.setItem("deviceData", JSON.stringify(jsonData));
     }
     return JSON.parse(localStorage.getItem("deviceData"));
 }
 
 /*
-    Fetches Data Via GET request from dweet
+    Fetches Data Via GET request from dweet, and generates the graphs with new data.
  */
 function fetchData(name, refresh=true) {
     var url = "https://dweet.io/get/dweets/for/" + name;
@@ -142,20 +135,8 @@ function fetchData(name, refresh=true) {
         });
 }
 
-fetchData("PIBOMETER");
-
-function createTemperatureGraph(tempData) {
-    dataArray = [];
-
-    tempData.forEach(function (data) {
-       dataArray.push([Date.parse(data.created), data.content.weather_readings.temperature]);
-    });
-
-    loadChart("temperature", "Temperature", "Degrees", "PIBOMETER", dataArray);
-}
-
 /*
-    Method used to create Graphs
+    Method used to create Graphs based on data that is passed into it,
  */
 function createGraphs(dataArray) {
     tempData = [];
@@ -174,25 +155,19 @@ function createGraphs(dataArray) {
         distanceData.sort();
     }
 
-
-
     loadChart("temperature", "Temperature", "Degrees", "PIBOMETER", tempData);
     loadChart("humidity", "Humidity", "Water Content", "PIBOMETER", humData);
     loadChart("distance", "Distance Set off", "CM", "PIBOMETER", distanceData);
 }
 
-//var storedData = JSON.parse(localStorage.getItem("deviceData"));
-
-//console.log("Stored Data " + storedData);
-
-//createGraphs(storedData);
-
+fetchData("PIBOMETER");
+/*
+    Sets buttons to do actions.
+ */
 var pullNewData = document.getElementById("pullData");
 var deleteData = document.getElementById("deleteData");
 pullNewData.onclick = function () {
     fetchData("PIBOMETER");
-    //let storedData = JSON.parse(localStorage.getItem("deviceData"));
-    //createGraphs(storedData);
 };
 deleteData.onclick = function () {
     window.localStorage.clear();
